@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.io.File;
 import java.util.Date;
+import java.util.UUID;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -29,7 +30,7 @@ public class Database {
 
     private Database() {
         taskList = new ArrayList<>();
-        id= 1;
+
         // Prevent reflection instantiation
         if (instance != null) {
             throw new IllegalStateException("Already initialized.");
@@ -63,7 +64,7 @@ public class Database {
             // Create new task element
             Element newTask = doc.createElement("task");
             newTask.setAttribute("completed", String.valueOf(false));
-            newTask.setAttribute("id", String.valueOf(id));
+            newTask.setAttribute("id", String.valueOf(task.getId()));
 
             // Create title element
             Element taskTitle = doc.createElement("title");
@@ -121,6 +122,7 @@ public class Database {
                     String title = taskElement.getElementsByTagName("title").item(0).getTextContent();
                     String description = taskElement.getElementsByTagName("description").item(0).getTextContent();
                     String dateStr = taskElement.getElementsByTagName("CreatedAt").item(0).getTextContent();
+                    String idStr  = taskElement.getAttribute("id").toString();
                     Date date = null;
                     try {
                         SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a");
@@ -130,8 +132,9 @@ public class Database {
                         date = new Date(); // fallback to current date
                     }
 
-                    // create new Task object and add to taskList
-                    Task task = new Task(title, description,date,false);
+
+                    UUID taskId = idStr.isEmpty() ? null : UUID.fromString(idStr);
+                    Task task = new Task(title, description, date, false, taskId);
                     taskList.add(task);
                 }
             }

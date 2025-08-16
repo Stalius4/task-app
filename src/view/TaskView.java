@@ -22,7 +22,7 @@ public class TaskView {
         System.out.println("\n=== Task Manager ===");
         System.out.println("1. Add Task");
 
-        if (tasks.size() == 0) {
+        if (tasks.isEmpty()) {
             System.out.println("No tasks to show.");
         } else {
             System.out.println("2. View All Tasks");

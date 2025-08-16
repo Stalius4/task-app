@@ -2,16 +2,16 @@ package controller;
 
 import model.Task;
 import view.TaskView;
-import java.util.ArrayList;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 import model.Database;
+
 public class TaskController {
-    private List<Task> taskList;
-    private TaskView view;
-    private Scanner scanner;
-    private Database db;
+    private final TaskView view;
+    private final Scanner scanner;
+    private final Database db;
 
     public TaskController() {
         db = Database.getInstance();

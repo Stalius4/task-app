@@ -29,12 +29,9 @@ public class Task {
 
     @Override
     public String toString(){
-        StringBuilder sb = new StringBuilder("Title: "+ title + "\n");
-        sb.append("Description: " + description +"\n");
-        sb.append("Date: " + date.toString() + "\n");
-        sb.append("Compleded: " + (isCompleted ? "Yes" : "No"));
-        String result =  sb.toString();
-        return result;
+        return "Title: " + title + "\n" + "Description: " + description + "\n" +
+                "Date: " + date.toString() + "\n" +
+                "Completed: " + (isCompleted ? "Yes" : "No");
     }
     public String getTitle() {return title;}
     public String getDescription() {return description;}

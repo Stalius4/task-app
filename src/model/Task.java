@@ -36,9 +36,17 @@ public class Task {
                 "Date: " + date.toString() + "\n" +
                 "Completed: " + (isCompleted ? "Yes" : "No") + "\n" + "ID: " + id;
     }
+
+    //getters
     public String getTitle() {return title;}
     public String getDescription() {return description;}
     public Date getDate(){return date;}
     public boolean getStatus() {return isCompleted;}
     public UUID getId(){return id;}
+
+    //setters
+    public void setStatus(){
+        isCompleted =!isCompleted;
+    }
+
 }

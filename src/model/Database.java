@@ -1,5 +1,6 @@
 package model;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.Date;
 import java.util.UUID;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -18,6 +20,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 public class Database {
     // The volatile keyword ensures the instance variable is correctly published across threads
@@ -52,6 +55,48 @@ public class Database {
     }
 
 
+    public void changeStatus( String id){
+        try{
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+            Document doc = docBuilder.parse(FILE_PATH);
+            doc.getDocumentElement().normalize();
+
+            Element root = doc.getDocumentElement();
+
+            // get all task elements
+            NodeList taskNodes = root.getElementsByTagName("task");
+
+            for (int i = 0; i < taskNodes.getLength(); i++) {
+                Node taskNode = taskNodes.item(i);
+
+                if (taskNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element taskElement = (Element) taskNode;
+
+                String idStr  = taskElement.getAttribute("id");
+                if(idStr.equals(id)){
+                    String taskTitle = taskElement.getElementsByTagName("title").item(0).getTextContent();
+                    System.out.print(taskTitle);
+                    taskElement.setAttribute("completed","true");
+                }
+                System.out.println(idStr);
+
+
+            }
+                saveXml(doc);
+            }
+
+
+
+
+        } catch (ParserConfigurationException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (SAXException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public void addTask(Task task) {
         taskList.add(task);
 
@@ -84,6 +129,7 @@ public class Database {
             newTask.appendChild(taskTime);
 
 
+
             // Append new task to the root
             doc.getDocumentElement().appendChild(newTask);
             saveXml(doc);
@@ -92,9 +138,8 @@ public class Database {
         } catch (Exception e) {
             e.printStackTrace();
 
-
         }
-        id++;
+
     }
 
     public void getData() {
@@ -122,7 +167,8 @@ public class Database {
                     String title = taskElement.getElementsByTagName("title").item(0).getTextContent();
                     String description = taskElement.getElementsByTagName("description").item(0).getTextContent();
                     String dateStr = taskElement.getElementsByTagName("CreatedAt").item(0).getTextContent();
-                    String idStr  = taskElement.getAttribute("id").toString();
+                    String idStr  = taskElement.getAttribute("id");
+                    boolean status = Boolean.parseBoolean(taskElement.getAttribute("completed"));
                     Date date = null;
                     try {
                         SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a");
@@ -134,7 +180,7 @@ public class Database {
 
 
                     UUID taskId = idStr.isEmpty() ? null : UUID.fromString(idStr);
-                    Task task = new Task(title, description, date, false, taskId);
+                    Task task = new Task(title, description, date, status, taskId);
                     taskList.add(task);
                 }
             }

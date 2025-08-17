@@ -37,11 +37,15 @@ public class TaskView {
         Integer i = 0;
         for(Task task : tasks){
             i++;
-            System.out.println(i + " . " + task.getTitle());
+            System.out.println(i + ". " + task.getTitle());
         }
     }
 
     public void dispalyDeleteOptions(){
         System.out.println("Please type number to delete a task.");
+    }
+
+    public void displayStatusOptions(){
+        System.out.print("1. Change status." + "\n" +"2. Go back.");
     }
 }

@@ -6,6 +6,8 @@ import view.TaskView;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.UUID;
+
 import model.Database;
 
 
@@ -46,7 +48,9 @@ public class TaskController {
                     addTask();
                     break;
                 case 2:
-                    view.displayTasks(currentTasks);
+                    view.showTitles(currentTasks);
+                    int selectTask = scanner.nextInt();
+                    scanner.nextLine();
                     break;
                 case 3:
                     view.showTitles(currentTasks);
@@ -100,6 +104,32 @@ public class TaskController {
         while (it.hasNext()) {
             it.next();
             if (currentIndex == number) {
+                it.remove();
+                System.out.println("Task deleted successfully!");
+                return;
+            }
+            currentIndex++;
+        }
+    }
+    private void changeTaskStatus(List<Task> taskList, Integer number) {
+        // Validate the task number is within valid range
+        if (number < 1 || number > taskList.size()) {
+            System.out.println("Invalid task number!");
+            return;
+        }
+
+        Iterator<Task> it = taskList.iterator();
+        int currentIndex = 1;
+
+        // Find and remove the task at the specified position
+        while (it.hasNext()) {
+           Task task = it.next();
+            if (currentIndex == number) {
+                // get task id
+                UUID id = task.getId();
+                //change task status
+                task.setStatus();
+                //update xml file
                 it.remove();
                 System.out.println("Task deleted successfully!");
                 return;

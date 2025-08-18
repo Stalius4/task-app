@@ -30,6 +30,17 @@ public class Task {
 
     }
 
+    /**
+     * Returns a multi-line string representation of the task.
+     *
+     * <p>The returned string contains the title, description, date (using {@code Date#toString()}), 
+     * completion status ("Yes" or "No"), and the UUID.</p>
+     *
+     * <p>Note: this method does not perform null checks; if {@code date} is null a
+     * {@link NullPointerException} may be thrown when invoking {@code date.toString()}.</p>
+     *
+     * @return a multi-line human-readable representation of this task
+     */
     @Override
     public String toString(){
         return "Title: " + title + "\n" + "Description: " + description + "\n" +
@@ -37,14 +48,45 @@ public class Task {
                 "Completed: " + (isCompleted ? "Yes" : "No") + "\n" + "ID: " + id;
     }
 
-    //getters
+    /**
+ * Returns the task's title.
+ *
+ * @return the title string
+ */
     public String getTitle() {return title;}
-    public String getDescription() {return description;}
-    public Date getDate(){return date;}
-    public boolean getStatus() {return isCompleted;}
-    public UUID getId(){return id;}
+    /**
+ * Returns the task's description.
+ *
+ * @return the task description, or null if not set
+ */
+public String getDescription() {return description;}
+    /**
+ * Returns the task's date.
+ *
+ * The returned Date is the internal stored instance; modifying it will affect this Task.
+ * If an independent copy is required, construct a new Date from the returned value.
+ *
+ * @return the task's date (may be null)
+ */
+public Date getDate(){return date;}
+    /**
+ * Returns whether the task is completed.
+ *
+ * @return true if the task is completed; false otherwise
+ */
+public boolean getStatus() {return isCompleted;}
+    /**
+ * Returns the task's unique identifier.
+ *
+ * @return the UUID assigned to this task
+ */
+public UUID getId(){return id;}
 
-    //setters
+    /**
+     * Toggle the task's completion status.
+     *
+     * Flips the internal `isCompleted` flag (true → false, false → true).
+     */
     public void setStatus(){
         isCompleted =!isCompleted;
     }

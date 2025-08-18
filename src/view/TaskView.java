@@ -33,6 +33,11 @@ public class TaskView {
         System.out.print("Choose an option: ");
     }
 
+    /**
+     * Prints a numbered list of task titles to standard output, numbering items starting at 1.
+     *
+     * @param tasks the list of tasks whose titles will be printed; if the list is empty nothing is printed
+     */
     public void showTitles(List<Task> tasks){
         Integer i = 0;
         for(Task task : tasks){
@@ -41,10 +46,18 @@ public class TaskView {
         }
     }
 
+    /**
+     * Prints a prompt asking the user to type the number of the task to delete.
+     */
     public void dispalyDeleteOptions(){
         System.out.println("Please type number to delete a task.");
     }
 
+    /**
+     * Prints the task status action options to standard output.
+     *
+     * Outputs the two choices "1. Change status." and "2. Go back." separated by a newline.
+     */
     public void displayStatusOptions(){
         System.out.print("1. Change status." + "\n" +"2. Go back.");
     }

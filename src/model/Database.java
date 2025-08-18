@@ -40,6 +40,14 @@ public class Database {
         }
     }
 
+    /**
+     * Returns the singleton Database instance, creating it on first access.
+     *
+     * This method uses lazy initialization with double-checked locking to ensure
+     * the Database is created only once in a thread-safe manner.
+     *
+     * @return the shared Database singleton
+     */
     public static Database getInstance() {
         // First check (no synchronization)
         if (instance == null) {
@@ -55,6 +63,17 @@ public class Database {
     }
 
 
+    /**
+     * Marks the task with the given id as completed in the persistent XML store.
+     *
+     * Loads the XML file at FILE_PATH, finds the <task> element whose "id" attribute
+     * equals the provided id, sets its "completed" attribute to "true", and writes
+     * the updated document back to the file. The method prints the matched task's
+     * title and prints each task id encountered while scanning.
+     *
+     * @param id the task id to mark completed (compared against each task element's "id" attribute)
+     * @throws RuntimeException if parsing, reading, or writing the XML fails
+     */
     public void changeStatus( String id){
         try{
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -97,6 +116,15 @@ public class Database {
             throw new RuntimeException(e);
         }
     }
+    /**
+     * Adds a Task to the in-memory list and persists it as a new `<task>` element in the XML file at {@code FILE_PATH}.
+     *
+     * The persisted XML task will have attributes `completed="false"` and `id` set from {@code task.getId()},
+     * and child elements `title`, `description`, and `CreatedAt`. The `CreatedAt` timestamp is formatted using
+     * pattern "MM-dd-yyyy hh:mm:ss a".
+     *
+     * @param task the Task to add; its id, title, description, and date are used when creating the XML entry
+     */
     public void addTask(Task task) {
         taskList.add(task);
 
@@ -142,6 +170,19 @@ public class Database {
 
     }
 
+    /**
+     * Loads tasks from the XML file (FILE_PATH) and populates the in-memory taskList.
+     *
+     * Parses each <task> element under the document root and constructs a corresponding
+     * Task object using the element's title, description, CreatedAt (parsed with pattern
+     * "MM-dd-yyyy hh:mm:ss a"), completed attribute (as boolean), and id attribute (as UUID).
+     * If the CreatedAt value cannot be parsed, the current date is used as a fallback.
+     *
+     * Side effects:
+     * - Clears or appends to the in-memory taskList (as implemented) by adding each loaded Task.
+     * - Reads from and depends on the FILE_PATH XML file structure (expects <task> children
+     *   with <title>, <description>, <CreatedAt> and attributes "id" and "completed").
+     */
     public void getData() {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 

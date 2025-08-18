@@ -6,6 +6,8 @@ import view.TaskView;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.UUID;
+
 import model.Database;
 
 
@@ -30,8 +32,20 @@ public class TaskController {
     }
 
     /**
-     * Main application loop that displays the menu and processes user choices.
-     * Continues running until the user chooses to exit (option 4).
+     * Run the main application loop: display the menu, read the user's numeric choice,
+     * and dispatch to the appropriate controller actions until the user chooses to exit.
+     *
+     * <p>Menu choices handled:
+     * <ul>
+     *   <li>1 — prompt to add a new task (calls addTask())</li>
+     *   <li>2 — show task titles and read a selection (selection currently unused)</li>
+     *   <li>3 — show task titles, prompt delete options, and delete the selected task (calls deleteTask)</li>
+     *   <li>4 — exit the loop and return from the method</li>
+     * </ul>
+     *
+     * <p>The method reads numeric input from the controller's Scanner and updates
+     * the Database-backed task list via the controller's helper methods. Invalid
+     * numeric menu choices result in a printed "Invalid option!" message.
      */
     public void run() {
         boolean running = true;
@@ -46,7 +60,9 @@ public class TaskController {
                     addTask();
                     break;
                 case 2:
-                    view.displayTasks(currentTasks);
+                    view.showTitles(currentTasks);
+                    int selectTask = scanner.nextInt();
+                    scanner.nextLine();
                     break;
                 case 3:
                     view.showTitles(currentTasks);
@@ -81,10 +97,13 @@ public class TaskController {
     }
 
     /**
-     * Deletes a task from the task list based on user selection.
-     * 
-     * @param taskList the list of tasks to delete from
-     * @param number the position number of the task to delete (1-based index)
+     * Removes the task at the given 1-based position from the provided task list.
+     *
+     * If the position is out of range, the list is left unchanged and "Invalid task number!" is printed.
+     * On success the task is removed from the list and "Task deleted successfully!" is printed.
+     *
+     * @param taskList the list to remove the task from
+     * @param number the 1-based index of the task to delete
      */
     private void deleteTask(List<Task> taskList, Integer number) {
         // Validate the task number is within valid range
@@ -100,6 +119,43 @@ public class TaskController {
         while (it.hasNext()) {
             it.next();
             if (currentIndex == number) {
+                it.remove();
+                System.out.println("Task deleted successfully!");
+                return;
+            }
+            currentIndex++;
+        }
+    }
+    /**
+     * Change the status of the task at the given 1-based position and remove it from the list.
+     *
+     * Validates that the provided position is within the bounds of taskList; if not, prints
+     * "Invalid task number!" and returns. For the targeted task this method calls
+     * task.setStatus(), removes the task from the provided list, and prints
+     * "Task deleted successfully!".
+     *
+     * @param taskList the mutable list of tasks to operate on
+     * @param number   1-based index of the task whose status will be changed and which will be removed
+     */
+    private void changeTaskStatus(List<Task> taskList, Integer number) {
+        // Validate the task number is within valid range
+        if (number < 1 || number > taskList.size()) {
+            System.out.println("Invalid task number!");
+            return;
+        }
+
+        Iterator<Task> it = taskList.iterator();
+        int currentIndex = 1;
+
+        // Find and remove the task at the specified position
+        while (it.hasNext()) {
+           Task task = it.next();
+            if (currentIndex == number) {
+                // get task id
+                UUID id = task.getId();
+                //change task status
+                task.setStatus();
+                //update xml file
                 it.remove();
                 System.out.println("Task deleted successfully!");
                 return;

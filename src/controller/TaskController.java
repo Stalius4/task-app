@@ -6,7 +6,7 @@ import view.TaskView;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
-import java.util.UUID;
+
 
 import model.Database;
 
@@ -56,16 +56,43 @@ public class TaskController {
             scanner.nextLine(); // consume newline
 
             switch (choice) {
+
+                // Add task
                 case 1:
                     addTask();
                     break;
+                //Show task titles
                 case 2:
-                    view.showTitles(currentTasks);
-                    int selectTask = scanner.nextInt();
+                    view.displayAllTitles(currentTasks);
+                    System.out.println("Choose the task:");
+                    int selectedTask = scanner.nextInt();
                     scanner.nextLine();
+                    Task task = currentTasks.get(selectedTask -1);
+                    view.displayTask(task);
+                    view.editOptions();
+                    int selectedOption = scanner.nextInt();
+                    scanner.nextLine();
+
+                    switch (selectedOption){
+                        case 1: // Edit title
+                            System.out.print("Enter new title: ");
+                            String editTitle = scanner.nextLine();
+                            db.editTask(task, selectedOption, editTitle);
+                            break;
+                        case 2: // Edit description
+                            System.out.print("Enter new description: ");
+                            String editDescription = scanner.nextLine();
+                            db.editTask(task, selectedOption, editDescription);
+                            break;
+                        case 3: // Toggle status
+                            db.editTask(task, selectedOption, null); // newValue not needed for status toggle
+                            break;
+                        default:
+                            System.out.println("Invalid option!");
+                    }
                     break;
                 case 3:
-                    view.showTitles(currentTasks);
+                    view.displayAllTitles(currentTasks);
                     view.dispalyDeleteOptions();
                     int delChoice = scanner.nextInt();
                     scanner.nextLine(); // consume newline after reading int
@@ -80,6 +107,7 @@ public class TaskController {
         }
     }
 
+//------------------------Add task----------------------------------------------------------------------
     /**
      * Prompts the user for task details and adds a new task to the database.
      * Collects title and description from user input.
@@ -94,8 +122,11 @@ public class TaskController {
         Task task = new Task(title, description);
         db.addTask(task);
         System.out.println("Task added successfully!");
+        System.out.println(task);
     }
 
+
+//-------------------------------------Delete task---------------------------------------------------------------
     /**
      * Removes the task at the given 1-based position from the provided task list.
      *
@@ -111,7 +142,6 @@ public class TaskController {
             System.out.println("Invalid task number!");
             return;
         }
-
         Iterator<Task> it = taskList.iterator();
         int currentIndex = 1;
 
@@ -126,16 +156,19 @@ public class TaskController {
             currentIndex++;
         }
     }
+
+    //-------------------------------Change status------------------------------------------------------------------------------
+
     /**
-     * Change the status of the task at the given 1-based position and remove it from the list.
+     * Change the status of the task at the given 1-based position and update both in-memory and XML storage.
      *
      * Validates that the provided position is within the bounds of taskList; if not, prints
      * "Invalid task number!" and returns. For the targeted task this method calls
-     * task.setStatus(), removes the task from the provided list, and prints
-     * "Task deleted successfully!".
+     * Database.changeStatus() to update the XML file, then calls task.setStatus() to update
+     * the in-memory task, and prints "Task status changed successfully!".
      *
      * @param taskList the mutable list of tasks to operate on
-     * @param number   1-based index of the task whose status will be changed and which will be removed
+     * @param number   1-based index of the task whose status will be changed
      */
     private void changeTaskStatus(List<Task> taskList, Integer number) {
         // Validate the task number is within valid range
@@ -144,23 +177,15 @@ public class TaskController {
             return;
         }
 
-        Iterator<Task> it = taskList.iterator();
-        int currentIndex = 1;
-
-        // Find and remove the task at the specified position
-        while (it.hasNext()) {
-           Task task = it.next();
-            if (currentIndex == number) {
-                // get task id
-                UUID id = task.getId();
-                //change task status
-                task.setStatus();
-                //update xml file
-                it.remove();
-                System.out.println("Task deleted successfully!");
-                return;
-            }
-            currentIndex++;
-        }
+        // Get the task at the specified position (convert to 0-based index)
+        Task task = taskList.get(number - 1);
+        
+        // Get task id and convert to string
+        String taskId = task.getId().toString();
+        
+        // Update XML file using Database.changeStatus()
+        db.changeStatus(taskId, task);
+        
+        System.out.println("Task status changed successfully!");
     }
 }

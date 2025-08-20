@@ -78,7 +78,7 @@ Additionally, I want to learn how to work with databases:
 - 
 
 ### Lessons learned:
-- 
+-
 
 ### Next steps:
 - 

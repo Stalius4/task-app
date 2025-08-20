@@ -90,5 +90,7 @@ public UUID getId(){return id;}
     public void setStatus(){
         isCompleted =!isCompleted;
     }
+    public void setTitle(String title){this.title = title;}
+    public void setDescription(String description){this.description = description;}
 
 }

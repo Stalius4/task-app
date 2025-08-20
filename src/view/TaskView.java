@@ -38,7 +38,7 @@ public class TaskView {
      *
      * @param tasks the list of tasks whose titles will be printed; if the list is empty nothing is printed
      */
-    public void showTitles(List<Task> tasks){
+    public void displayAllTitles(List<Task> tasks){
         Integer i = 0;
         for(Task task : tasks){
             i++;
@@ -60,5 +60,10 @@ public class TaskView {
      */
     public void displayStatusOptions(){
         System.out.print("1. Change status." + "\n" +"2. Go back.");
+    }
+
+
+    public void editOptions(){
+        System.out.println("1. Edit title." + "\n" + "2. Edit description." + "\n"+ "3. Make it completed");
     }
 }

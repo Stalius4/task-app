@@ -23,11 +23,13 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class Database {
-    // The volatile keyword ensures the instance variable is correctly published across threads
+
     private static final String FILE_PATH = "./tasks.xml";
     private static volatile Database instance;
     private ArrayList<Task> taskList;
     private int id;
+
+
     // Private constructor prevents instantiation from other classes
 
 
@@ -62,25 +64,22 @@ public class Database {
         return instance;
     }
 
-
-    /**
-     * Marks the task with the given id as completed in the persistent XML store.
-     *
-     * Loads the XML file at FILE_PATH, finds the <task> element whose "id" attribute
-     * equals the provided id, sets its "completed" attribute to "true", and writes
-     * the updated document back to the file. The method prints the matched task's
-     * title and prints each task id encountered while scanning.
-     *
-     * @param id the task id to mark completed (compared against each task element's "id" attribute)
-     * @throws RuntimeException if parsing, reading, or writing the XML fails
-     */
-    public void changeStatus( String id){
-        try{
+    public Document openDocument() {
+        try {
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
             Document doc = docBuilder.parse(FILE_PATH);
             doc.getDocumentElement().normalize();
+            return doc;
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+
+
+    public void changeStatus( String id, Task task){
+            Document doc = openDocument();
             Element root = doc.getDocumentElement();
 
             // get all task elements
@@ -95,27 +94,62 @@ public class Database {
                 String idStr  = taskElement.getAttribute("id");
                 if(idStr.equals(id)){
                     String taskTitle = taskElement.getElementsByTagName("title").item(0).getTextContent();
-                    System.out.print(taskTitle);
-                    taskElement.setAttribute("completed","true");
+                    task.setStatus();
+                    taskElement.setAttribute("completed",String.valueOf(task.getStatus()));
                 }
                 System.out.println(idStr);
-
-
             }
                 saveXml(doc);
             }
-
-
-
-
-        } catch (ParserConfigurationException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (SAXException e) {
-            throw new RuntimeException(e);
-        }
     }
+
+
+
+    //---------------------- Unified Edit Method -------------------------------------------------------------------------------
+    
+    public void editTask(Task task, int selectedOption, String newValue) {
+        Document doc = openDocument();
+        Element root = doc.getDocumentElement();
+        NodeList taskNodes = root.getElementsByTagName("task");
+
+        for (int i = 0; i < taskNodes.getLength(); i++) {
+            Node taskNode = taskNodes.item(i);
+
+            if (taskNode.getNodeType() == Node.ELEMENT_NODE) {
+                Element taskElement = (Element) taskNode;
+
+                String idStr = taskElement.getAttribute("id");
+                if (idStr.equals(task.getId().toString())) {
+                    switch (selectedOption) {
+                        case 1: // Edit title
+                            Element titleElement = (Element) taskElement.getElementsByTagName("title").item(0);
+                            titleElement.setTextContent(newValue);
+                            task.setTitle(newValue);
+                            System.out.println("Title changed for task ID: " + idStr);
+                            break;
+                        case 2: // Edit description
+                            Element descElement = (Element) taskElement.getElementsByTagName("description").item(0);
+                            descElement.setTextContent(newValue);
+                            task.setDescription(newValue);
+                            System.out.println("Description changed for task ID: " + idStr);
+                            break;
+                        case 3: // Edit status (toggle)
+                            task.setStatus();
+                            taskElement.setAttribute("completed", String.valueOf(task.getStatus()));
+                            System.out.println("Status changed for task ID: " + idStr);
+                            break;
+                        default:
+                            System.out.println("Invalid option!");
+                            return;
+                    }
+                    break; // Exit loop once we find and update the task
+                }
+            }
+        }
+        saveXml(doc);
+    }
+
+    //------------------------------------------------------------------------------------------------------
     /**
      * Adds a Task to the in-memory list and persists it as a new `<task>` element in the XML file at {@code FILE_PATH}.
      *
@@ -128,11 +162,7 @@ public class Database {
     public void addTask(Task task) {
         taskList.add(task);
 
-        try {
-            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-            Document doc = docBuilder.parse(FILE_PATH);
-            doc.getDocumentElement().normalize();
+        Document doc = openDocument();
 
             // Create new task element
             Element newTask = doc.createElement("task");
@@ -163,12 +193,9 @@ public class Database {
             saveXml(doc);
             System.out.println("Student created: " + task.getTitle());
 
-        } catch (Exception e) {
-            e.printStackTrace();
-
         }
 
-    }
+
 
     /**
      * Loads tasks from the XML file (FILE_PATH) and populates the in-memory taskList.
@@ -184,12 +211,7 @@ public class Database {
      *   with <title>, <description>, <CreatedAt> and attributes "id" and "completed").
      */
     public void getData() {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-
-        try {
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            File file = new File(FILE_PATH);
-            Document doc = builder.parse(file);
+        Document doc = openDocument();
 
             // get the root element
             Element root = doc.getDocumentElement();
@@ -225,9 +247,7 @@ public class Database {
                     taskList.add(task);
                 }
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+
     }
 
 

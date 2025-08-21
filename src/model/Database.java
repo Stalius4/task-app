@@ -27,12 +27,9 @@ public class Database {
     private static final String FILE_PATH = "./tasks.xml";
     private static volatile Database instance;
     private ArrayList<Task> taskList;
-    private int id;
 
 
     // Private constructor prevents instantiation from other classes
-
-
     private Database() {
         taskList = new ArrayList<>();
 
@@ -63,7 +60,7 @@ public class Database {
         }
         return instance;
     }
-
+//-------------------(Tool method) Open document-------------------------------------
     public Document openDocument() {
         try {
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -75,35 +72,6 @@ public class Database {
             throw new RuntimeException(e);
         }
     }
-
-
-
-    public void changeStatus( String id, Task task){
-            Document doc = openDocument();
-            Element root = doc.getDocumentElement();
-
-            // get all task elements
-            NodeList taskNodes = root.getElementsByTagName("task");
-
-            for (int i = 0; i < taskNodes.getLength(); i++) {
-                Node taskNode = taskNodes.item(i);
-
-                if (taskNode.getNodeType() == Node.ELEMENT_NODE) {
-                    Element taskElement = (Element) taskNode;
-
-                String idStr  = taskElement.getAttribute("id");
-                if(idStr.equals(id)){
-                    String taskTitle = taskElement.getElementsByTagName("title").item(0).getTextContent();
-                    task.setStatus();
-                    taskElement.setAttribute("completed",String.valueOf(task.getStatus()));
-                }
-                System.out.println(idStr);
-            }
-                saveXml(doc);
-            }
-    }
-
-
 
     //---------------------- Unified Edit Method -------------------------------------------------------------------------------
     
@@ -138,6 +106,14 @@ public class Database {
                             taskElement.setAttribute("completed", String.valueOf(task.getStatus()));
                             System.out.println("Status changed for task ID: " + idStr);
                             break;
+                        case 4: // Delete task
+                            Element parent = (Element) taskElement.getParentNode();
+                            parent.removeChild(taskElement);
+                            // Also remove from the in-memory list
+                            taskList.removeIf(t -> t.getId().equals(task.getId()));
+                            System.out.println("Task deleted with ID: " + idStr);
+                            break;
+
                         default:
                             System.out.println("Invalid option!");
                             return;
@@ -149,7 +125,9 @@ public class Database {
         saveXml(doc);
     }
 
-    //------------------------------------------------------------------------------------------------------
+
+    //-----------------------------------Add Task to XML-------------------------------------------------------------------
+
     /**
      * Adds a Task to the in-memory list and persists it as a new `<task>` element in the XML file at {@code FILE_PATH}.
      *
@@ -196,7 +174,7 @@ public class Database {
         }
 
 
-
+//-----------------------------Get Data from XML to ArrayList-------------------------------
     /**
      * Loads tasks from the XML file (FILE_PATH) and populates the in-memory taskList.
      *
@@ -250,7 +228,7 @@ public class Database {
 
     }
 
-
+//---------------------(Tool method) Save Data to XML----------------------------------
     private static void saveXml(Document doc) {
         try {
             // Remove empty text nodes and normalize whitespace before saving
@@ -273,7 +251,7 @@ public class Database {
         }
     }
 
-    // Helper method to remove empty text nodes
+    //------------ Helper method to remove empty text nodes----------------------------------
     private static void removeEmptyTextNodes(Node node) {
         NodeList children = node.getChildNodes();
         for (int i = children.getLength() - 1; i >= 0; i--) {
@@ -288,6 +266,8 @@ public class Database {
             }
         }
     }
+
+    //-------------------------Return Data in ArrayList-------------------------------
     public ArrayList<Task> getTaskList(){
         return taskList;
     }

@@ -87,22 +87,19 @@ public class TaskController {
                         case 3: // Toggle status
                             db.editTask(task, selectedOption, null); // newValue not needed for status toggle
                             break;
+                        case 4: //Delete
+                            db.editTask(task,selectedOption, null);
+                            break;
                         default:
-                            System.out.println("Invalid option!");
+                            System.out.println("Second, Invalid option!");
                     }
                     break;
+
                 case 3:
-                    view.displayAllTitles(currentTasks);
-                    view.dispalyDeleteOptions();
-                    int delChoice = scanner.nextInt();
-                    scanner.nextLine(); // consume newline after reading int
-                    deleteTask(currentTasks, delChoice);
-                    break;
-                case 4:
                     running = false;
                     break;
                 default:
-                    System.out.println("Invalid option!");
+                    System.out.println("Main, Invalid option!");
             }
         }
     }
@@ -155,37 +152,5 @@ public class TaskController {
             }
             currentIndex++;
         }
-    }
-
-    //-------------------------------Change status------------------------------------------------------------------------------
-
-    /**
-     * Change the status of the task at the given 1-based position and update both in-memory and XML storage.
-     *
-     * Validates that the provided position is within the bounds of taskList; if not, prints
-     * "Invalid task number!" and returns. For the targeted task this method calls
-     * Database.changeStatus() to update the XML file, then calls task.setStatus() to update
-     * the in-memory task, and prints "Task status changed successfully!".
-     *
-     * @param taskList the mutable list of tasks to operate on
-     * @param number   1-based index of the task whose status will be changed
-     */
-    private void changeTaskStatus(List<Task> taskList, Integer number) {
-        // Validate the task number is within valid range
-        if (number < 1 || number > taskList.size()) {
-            System.out.println("Invalid task number!");
-            return;
-        }
-
-        // Get the task at the specified position (convert to 0-based index)
-        Task task = taskList.get(number - 1);
-        
-        // Get task id and convert to string
-        String taskId = task.getId().toString();
-        
-        // Update XML file using Database.changeStatus()
-        db.changeStatus(taskId, task);
-        
-        System.out.println("Task status changed successfully!");
     }
 }

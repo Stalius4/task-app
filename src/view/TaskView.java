@@ -28,8 +28,7 @@ public class TaskView {
             System.out.println("2. View All Tasks");
         }
 
-        System.out.println("3. Delete task.");
-        System.out.println("4. Exit");
+        System.out.println("3. Exit");
         System.out.print("Choose an option: ");
     }
 
@@ -46,24 +45,11 @@ public class TaskView {
         }
     }
 
-    /**
-     * Prints a prompt asking the user to type the number of the task to delete.
-     */
-    public void dispalyDeleteOptions(){
-        System.out.println("Please type number to delete a task.");
-    }
 
-    /**
-     * Prints the task status action options to standard output.
-     *
-     * Outputs the two choices "1. Change status." and "2. Go back." separated by a newline.
-     */
-    public void displayStatusOptions(){
-        System.out.print("1. Change status." + "\n" +"2. Go back.");
-    }
+
 
 
     public void editOptions(){
-        System.out.println("1. Edit title." + "\n" + "2. Edit description." + "\n"+ "3. Make it completed");
+        System.out.println("1. Edit title." + "\n" + "2. Edit description." + "\n"+ "3. Make it completed" + "\n"+ "4. Delete");
     }
 }

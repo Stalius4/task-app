@@ -50,6 +50,10 @@ public class TaskView {
 
 
     public void editOptions(){
-        System.out.println("1. Edit title." + "\n" + "2. Edit description." + "\n"+ "3. Make it completed" + "\n"+ "4. Delete");
+        System.out.println("""
+                1. Edit title
+                2. Edit description
+                3. Make it completed
+                4. Delete""");
     }
 }

@@ -41,7 +41,6 @@ public class Database {
 
     /**
      * Returns the singleton Database instance, creating it on first access.
-     *
      * This method uses lazy initialization with double-checked locking to ensure
      * the Database is created only once in a thread-safe manner.
      *

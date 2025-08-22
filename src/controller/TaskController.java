@@ -51,9 +51,26 @@ public class TaskController {
         boolean running = true;
         while (running) {
             List<Task> currentTasks = db.getTaskList();
-            view.displayMenu(currentTasks);
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // consume newline
+
+//-------------error handling loop for first user input(Main menu) ----------------
+            boolean isValid = false;
+            int choice = -1;
+
+            while(!isValid){
+
+            try {
+                view.displayMenu(currentTasks);
+                choice = scanner.nextInt();
+                isValid = true;
+            } catch (Exception e) {
+                scanner.nextLine();
+                System.out.println("Not a number");
+                isValid = false;
+
+            } }
+//--------------------------------------------------------------
+
+            scanner.nextLine();
 
             switch (choice) {
 

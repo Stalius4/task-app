@@ -78,13 +78,10 @@ public class Database {
         Document doc = openDocument();
         Element root = doc.getDocumentElement();
         NodeList taskNodes = root.getElementsByTagName("task");
-
         for (int i = 0; i < taskNodes.getLength(); i++) {
             Node taskNode = taskNodes.item(i);
-
             if (taskNode.getNodeType() == Node.ELEMENT_NODE) {
                 Element taskElement = (Element) taskNode;
-
                 String idStr = taskElement.getAttribute("id");
                 if (idStr.equals(task.getId().toString())) {
                     switch (selectedOption) {
@@ -125,7 +122,7 @@ public class Database {
     }
 
 
-    //-----------------------------------Add Task to XML-------------------------------------------------------------------
+    //----------------------------Add Task to XML----------------------------------
 
     /**
      * Adds a Task to the in-memory list and persists it as a new `<task>` element in the XML file at {@code FILE_PATH}.
@@ -155,7 +152,6 @@ public class Database {
             Element taskDescription = doc.createElement("description");
             taskDescription.appendChild(doc.createTextNode(String.valueOf(task.getDescription())));
             newTask.appendChild(taskDescription);
-
             //Create time stamp
             Element taskTime = doc.createElement("CreatedAt");
             SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a");

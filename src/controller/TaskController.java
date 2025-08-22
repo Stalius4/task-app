@@ -51,28 +51,12 @@ public class TaskController {
         boolean running = true;
         while (running) {
             List<Task> currentTasks = db.getTaskList();
+            view.displayMenu(currentTasks);
+            // correctIntCheck is handling non-int input error
+            int firstUserInput = correctIntCheck(1,3);
 
-//-------------error handling loop for first user input(Main menu) ----------------
-            boolean isValid = false;
-            int choice = -1;
 
-            while(!isValid){
-
-            try {
-                view.displayMenu(currentTasks);
-                choice = scanner.nextInt();
-                isValid = true;
-            } catch (Exception e) {
-                scanner.nextLine();
-                System.out.println("Not a number");
-                isValid = false;
-
-            } }
-//--------------------------------------------------------------
-
-            scanner.nextLine();
-
-            switch (choice) {
+            switch (firstUserInput) {
 
                 // Add task
                 case 1:
@@ -140,7 +124,7 @@ public class TaskController {
     }
 
 
-//-------------------------------------Delete task---------------------------------------------------------------
+//-------------------------------------Delete-task------------------------------------
     /**
      * Removes the task at the given 1-based position from the provided task list.
      *
@@ -169,5 +153,26 @@ public class TaskController {
             }
             currentIndex++;
         }
+    }
+    private int correctIntCheck(int min, int max){
+        boolean isValid = false;
+        int userInput = -1; // default value before error handling
+
+        while(!isValid){
+            try {
+                System.out.print("Choose an option: ");
+                userInput = scanner.nextInt();
+                if (userInput < min || userInput > max) {
+                    System.out.println("Please enter a number between " + min + " and " + max);
+                    continue;  // ← THIS moves to the beginning of try block if number is out of range
+                }
+                isValid = true;
+                scanner.nextLine();
+            } catch (Exception e) {
+                scanner.nextLine();
+                System.out.println("Not a number!");
+            }
+        }
+        return userInput;
     }
 }

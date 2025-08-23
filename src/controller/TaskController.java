@@ -54,10 +54,7 @@ public class TaskController {
             view.displayMenu(currentTasks);
             // correctIntCheck is handling non-int input error
             int firstUserInput = correctIntCheck(1,3);
-
-
             switch (firstUserInput) {
-
                 // Add task
                 case 1:
                     addTask();
@@ -66,8 +63,8 @@ public class TaskController {
                 case 2:
                     view.displayAllTitles(currentTasks);
                     System.out.println("Choose the task:");
-                    int selectedTask = scanner.nextInt();
-                    scanner.nextLine();
+                    int taskListSize = currentTasks.size();
+                    int selectedTask = correctIntCheck(1, taskListSize);
                     Task task = currentTasks.get(selectedTask -1);
                     view.displayTask(task);
                     view.editOptions();
@@ -112,10 +109,26 @@ public class TaskController {
      */
     private void addTask() {
         System.out.print("Enter task title: ");
-        String title = scanner.nextLine();
+        String title;
+        while (true){
+            title = scanner.nextLine().trim();
+            if(!title.isEmpty()){
+                break;// exits loop if title is not empty
+            }
+            System.out.println("Task title can not be empty.");
+            System.out.println("Enter task title: ");
+        }
 
+        String description;
         System.out.print("Enter task description: ");
-        String description = scanner.nextLine();
+        while(true){
+            description = scanner.nextLine().trim();
+            if(!description.isEmpty()){
+                break;
+            }
+            System.out.println("Task description can not be empty.");
+            System.out.print("Enter task description: ");
+        }
 
         Task task = new Task(title, description);
         db.addTask(task);
@@ -154,6 +167,10 @@ public class TaskController {
             currentIndex++;
         }
     }
+
+    /**
+     *
+     */
     private int correctIntCheck(int min, int max){
         boolean isValid = false;
         int userInput = -1; // default value before error handling
@@ -170,7 +187,7 @@ public class TaskController {
                 scanner.nextLine();
             } catch (Exception e) {
                 scanner.nextLine();
-                System.out.println("Not a number!");
+                System.out.println("Please enter a number between " + min + " and " + max);
             }
         }
         return userInput;

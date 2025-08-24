@@ -32,9 +32,9 @@ public class Task {
 
     @Override
     public String toString(){
-        return "Title: " + title + "\n" + "Description: " + description + "\n" +
+        return  "\n"+"----==Selected Task==----"+ "\n" + "Title: " + title + "\n" + "Description: " + description + "\n" +
                 "Date: " + date.toString() + "\n" +
-                "Completed: " + (isCompleted ? "Yes" : "No") + "\n" + "ID: " + id;
+                "Completed: " + (isCompleted ? "Yes" : "No") + "\n" + "ID: " + id + "\n"+"----==|||||||||||||==----" + "\n";
     }
 
     public String getTitle() {return title;}

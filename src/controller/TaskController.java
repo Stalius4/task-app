@@ -48,12 +48,12 @@ public class TaskController {
      * numeric menu choices result in a printed "Invalid option!" message.
      */
     public void run() {
-        boolean running = true;
-        while (running) {
+        boolean isRunning = true;
+        while (isRunning) {
             List<Task> currentTasks = db.getTaskList();
             view.displayMenu(currentTasks);
             // correctIntCheck is handling non-int input error
-            int firstUserInput = correctIntCheck(1,3);
+            int firstUserInput = validateIntegerInput(1,3, "Option");
             switch (firstUserInput) {
                 case 1:
                     addTask();
@@ -63,7 +63,7 @@ public class TaskController {
                     editTask(currentTasks);
                     break;
                 case 3:
-                    running = false;
+                    isRunning = false;
                     break;
                 default:
                     System.out.println("Main, Invalid option!");
@@ -104,24 +104,32 @@ public class TaskController {
         System.out.println("Task added successfully!");
         System.out.println(task);
     }
+
 //------------------------Show and edit tasks ---------------------------------------
     private void editTask(List<Task> currentTasks){
         view.allTitles(currentTasks);
-        System.out.println("Choose the task:");
-        int taskListSize = currentTasks.size();
-        int selectedTask = correctIntCheck(1, taskListSize);
+        int selectedTask = validateIntegerInput(1, currentTasks.size(), "Task");//User selecting task with correct input checking
         Task task = currentTasks.get(selectedTask -1);
         view.displayTask(task);
         view.editOptions();
-        int selectedOption = scanner.nextInt();
-        scanner.nextLine();
+        int selectedOption = validateIntegerInput(1,4,"Option");
+
         //Edit tasks
         switch (selectedOption){
             case 1: // Edit title
-                System.out.print("Enter new title: ");
-                String editTitle = scanner.nextLine();
-                db.editTask(task, selectedOption, editTitle);
+                String newTitle;
+                while(true){
+                    System.out.print("Enter new title: ");
+                    newTitle =scanner.nextLine().trim();
+                    if(!newTitle.isEmpty()){
+                       break;// if new title input is not empty, exits while loop
+                    }
+                    System.out.println("Title can not be empty.");
+                }
+                db.editTask(task, selectedOption, newTitle);
                 break;
+
+
             case 2: // Edit description
                 System.out.print("Enter new description: ");
                 String editDescription = scanner.nextLine();
@@ -173,13 +181,19 @@ public class TaskController {
     /**
      *
      */
-    private int correctIntCheck(int min, int max){
+    private int validateIntegerInput(int min, int max, String menuPlace){
         boolean isValid = false;
         int userInput = -1; // default value before error handling
 
         while(!isValid){
             try {
-                System.out.print("Choose an option: ");
+                if(menuPlace.equals("Option")){
+                    System.out.print("Choose an option: ");
+                }
+                if(menuPlace.equals("Task")){
+                    System.out.print("Choose the task: ");
+                }
+
                 userInput = scanner.nextInt();
                 if (userInput < min || userInput > max) {
                     System.out.println("Please enter a number between " + min + " and " + max);

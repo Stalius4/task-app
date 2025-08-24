@@ -10,7 +10,7 @@ public class TaskView {
 
 
 
-    public void displayTasks(List<Task> tasks) {
+    public void TaskList(List<Task> tasks) {
         System.out.println("=== Tasks ===");
         for (Task task : tasks) {
             System.out.println("-----------------");
@@ -37,7 +37,7 @@ public class TaskView {
      *
      * @param tasks the list of tasks whose titles will be printed; if the list is empty nothing is printed
      */
-    public void displayAllTitles(List<Task> tasks){
+    public void allTitles(List<Task> tasks){
         Integer i = 0;
         for(Task task : tasks){
             i++;

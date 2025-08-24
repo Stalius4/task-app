@@ -55,44 +55,13 @@ public class TaskController {
             // correctIntCheck is handling non-int input error
             int firstUserInput = correctIntCheck(1,3);
             switch (firstUserInput) {
-                // Add task
                 case 1:
                     addTask();
                     break;
-                //Show task titles
                 case 2:
-                    view.displayAllTitles(currentTasks);
-                    System.out.println("Choose the task:");
-                    int taskListSize = currentTasks.size();
-                    int selectedTask = correctIntCheck(1, taskListSize);
-                    Task task = currentTasks.get(selectedTask -1);
-                    view.displayTask(task);
-                    view.editOptions();
-                    int selectedOption = scanner.nextInt();
-                    scanner.nextLine();
-
-                    switch (selectedOption){
-                        case 1: // Edit title
-                            System.out.print("Enter new title: ");
-                            String editTitle = scanner.nextLine();
-                            db.editTask(task, selectedOption, editTitle);
-                            break;
-                        case 2: // Edit description
-                            System.out.print("Enter new description: ");
-                            String editDescription = scanner.nextLine();
-                            db.editTask(task, selectedOption, editDescription);
-                            break;
-                        case 3: // Toggle status
-                            db.editTask(task, selectedOption, null); // newValue not needed for status toggle
-                            break;
-                        case 4: //Delete
-                            db.editTask(task,selectedOption, null);
-                            break;
-                        default:
-                            System.out.println("Second, Invalid option!");
-                    }
+                    //display all tasks and select 1 task to edit.
+                    editTask(currentTasks);
                     break;
-
                 case 3:
                     running = false;
                     break;
@@ -102,7 +71,7 @@ public class TaskController {
         }
     }
 
-//------------------------Add task----------------------------------------------------------------------
+//------------------------Add task-------------------------------------------------------
     /**
      * Prompts the user for task details and adds a new task to the database.
      * Collects title and description from user input.
@@ -113,7 +82,7 @@ public class TaskController {
         while (true){
             title = scanner.nextLine().trim();
             if(!title.isEmpty()){
-                break;// exits loop if title is not empty
+                break;// exits loop if the title is not empty
             }
             System.out.println("Task title can not be empty.");
             System.out.println("Enter task title: ");
@@ -135,7 +104,40 @@ public class TaskController {
         System.out.println("Task added successfully!");
         System.out.println(task);
     }
+//------------------------Show and edit tasks ---------------------------------------
+    private void editTask(List<Task> currentTasks){
+        view.allTitles(currentTasks);
+        System.out.println("Choose the task:");
+        int taskListSize = currentTasks.size();
+        int selectedTask = correctIntCheck(1, taskListSize);
+        Task task = currentTasks.get(selectedTask -1);
+        view.displayTask(task);
+        view.editOptions();
+        int selectedOption = scanner.nextInt();
+        scanner.nextLine();
+        //Edit tasks
+        switch (selectedOption){
+            case 1: // Edit title
+                System.out.print("Enter new title: ");
+                String editTitle = scanner.nextLine();
+                db.editTask(task, selectedOption, editTitle);
+                break;
+            case 2: // Edit description
+                System.out.print("Enter new description: ");
+                String editDescription = scanner.nextLine();
+                db.editTask(task, selectedOption, editDescription);
+                break;
+            case 3: // Toggle status
+                db.editTask(task, selectedOption, null); // newValue not needed for status toggle
+                break;
+            case 4: //Delete
+                db.editTask(task,selectedOption, null);
+                break;
+            default:
+                System.out.println("Second, Invalid option!");
+        }
 
+    }
 
 //-------------------------------------Delete-task------------------------------------
     /**

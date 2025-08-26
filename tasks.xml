@@ -1,33 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <tasks>
-    <task completed="true" id="8975d81b-d18c-4c17-a918-0aa22cfb27eb">
-        <title>New title</title>
-        <description>dfas</description>
-        <CreatedAt>08-16-2025 08:58:38 am</CreatedAt>
-    </task>
-    <task completed="false" id="218c657d-3660-444b-b3f7-eafc48a3a07e">
-        <title>Trecia diena</title>
-        <description>Irgi trecia diena</description>
-        <CreatedAt>08-17-2025 08:58:18 am</CreatedAt>
-    </task>
-    <task completed="false" id="bd788c74-230b-4373-bf7d-4e1b2655578d">
-        <title>fdg</title>
-        <description>dfg</description>
-        <CreatedAt>08-22-2025 09:10:26 am</CreatedAt>
-    </task>
-    <task completed="false" id="05bde796-121d-46f5-9595-2bd05171ddb4">
-        <title>sd</title>
-        <description>ds</description>
-        <CreatedAt>08-22-2025 10:15:51 am</CreatedAt>
-    </task>
-    <task completed="false" id="0c4ab11d-2553-432a-a6ee-760e03daf0b1">
-        <title>4@e</title>
-        <description>dfa</description>
-        <CreatedAt>08-23-2025 09:22:04 am</CreatedAt>
-    </task>
-    <task completed="false" id="380b2f74-4097-46b7-b0c4-841213d769ba">
-        <title>sdf</title>
-        <description/>
-        <CreatedAt>08-23-2025 09:27:27 am</CreatedAt>
-    </task>
+
 </tasks>

@@ -22,15 +22,15 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-public class Database {
+public class XMLDatabase {
 
     private static final String FILE_PATH = "./tasks.xml";
-    private static volatile Database instance;
+    private static volatile XMLDatabase instance;
     private ArrayList<Task> taskList;
 
 
     // Private constructor prevents instantiation from other classes
-    private Database() {
+    private XMLDatabase() {
         taskList = new ArrayList<>();
 
         // Prevent reflection instantiation
@@ -46,14 +46,14 @@ public class Database {
      *
      * @return the shared Database singleton
      */
-    public static Database getInstance() {
+    public static XMLDatabase getInstance() {
         // First check (no synchronization)
         if (instance == null) {
             // Synchronize only if instance is null
-            synchronized (Database.class) {
+            synchronized (XMLDatabase.class) {
                 // Second check (with synchronization)
                 if (instance == null) {
-                    instance = new Database();
+                    instance = new XMLDatabase();
                 }
             }
         }

@@ -2,6 +2,9 @@
   <library name="lib">
     <CLASSES>
       <root url="file://$USER_HOME$/javafx-sdk-24.0.2/lib" />
+      <root url="jar://$USER_HOME$/Documents/Java/jackson-annotations-3.0-rc5.jar!/" />
+      <root url="jar://$USER_HOME$/Documents/Java/jackson-core-2.19.2.jar!/" />
+      <root url="jar://$USER_HOME$/Documents/Java/jackson-databind-2.19.2.jar!/" />
     </CLASSES>
     <JAVADOC />
     <NATIVE>

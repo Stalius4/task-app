@@ -1,5 +1,6 @@
 package controller;
 
+import model.JsonDatabase;
 import model.Task;
 import view.TaskView;
 
@@ -8,7 +9,7 @@ import java.util.List;
 import java.util.Scanner;
 
 
-import model.Database;
+import model.XMLDatabase;
 
 
 /**
@@ -18,14 +19,14 @@ import model.Database;
 public class TaskController {
     private final TaskView view;
     private final Scanner scanner;
-    private final Database db;
+    private final JsonDatabase db;
 
     /**
      * Initializes the TaskController with necessary dependencies.
      * Sets up the database connection, view, and input scanner.
      */
     public TaskController() {
-        db = Database.getInstance();
+        db = JsonDatabase.getInstance();
         db.getData();
         view = new TaskView();
         scanner = new Scanner(System.in);
@@ -107,15 +108,19 @@ public class TaskController {
 
 //------------------------Show and edit tasks ---------------------------------------
     private void editTask(List<Task> currentTasks){
+        if(currentTasks.isEmpty()){
+            System.out.println("No tasks!");
+            return;
+        }
         view.allTitles(currentTasks);
         int selectedTask = validateIntegerInput(1, currentTasks.size(), "Task");//User selecting task with correct input checking
         Task task = currentTasks.get(selectedTask -1);
         view.displayTask(task);
         view.editOptions();
-        int selectedOption = validateIntegerInput(1,4,"Option");
+        int editOption = validateIntegerInput(1,4,"Option");
 
         //Edit tasks
-        switch (selectedOption){
+        switch (editOption){
             case 1: // Edit title
                 String newTitle;
                 while(true){
@@ -126,20 +131,27 @@ public class TaskController {
                     }
                     System.out.println("Title can not be empty.");
                 }
-                db.editTask(task, selectedOption, newTitle);
+                db.editTask(task, editOption, newTitle);
                 break;
 
 
             case 2: // Edit description
-                System.out.print("Enter new description: ");
-                String editDescription = scanner.nextLine();
-                db.editTask(task, selectedOption, editDescription);
+                String newDescription;
+                while (true) {
+                    System.out.print("Enter new description: ");
+                    newDescription =scanner.nextLine().trim();
+                    if(!newDescription.isEmpty()){
+                        break;
+                    }
+                    System.out.println("Description can not be empty.");
+                }
+                db.editTask(task, editOption, newDescription);
                 break;
             case 3: // Toggle status
-                db.editTask(task, selectedOption, null); // newValue not needed for status toggle
+                db.editTask(task, editOption, null); // newValue not needed for status toggle
                 break;
             case 4: //Delete
-                db.editTask(task,selectedOption, null);
+                db.editTask(task,editOption, null);
                 break;
             default:
                 System.out.println("Second, Invalid option!");
@@ -179,7 +191,9 @@ public class TaskController {
     }
 
     /**
-     *
+     * @param min is always 1
+     * @param max depends on how many tasks or options to choose from.
+     * @param menuPlace decides what message to print out  ( task or option)
      */
     private int validateIntegerInput(int min, int max, String menuPlace){
         boolean isValid = false;

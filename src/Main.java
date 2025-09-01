@@ -1,4 +1,6 @@
 import controller.TaskController;
+import database.DatabaseInitializer;
+import database.DatabaseManager;
 
 public class Main {
     /**
@@ -11,8 +13,13 @@ public class Main {
      * @param args command-line arguments (ignored)
      */
     public static void main(String[] args) {
-    TaskController controller = new TaskController();
-    controller.run();
+        DatabaseInitializer.initializeDatabase();
+        DatabaseManager.insertSimpleTask("new task");
+//        TaskController controller = new TaskController();
+//        controller.run();
+        DatabaseManager.shutdown();
+
+
 //        JacksonTest  test = new JacksonTest();
 //        test.convertToJson(new Task("1", "desc"));
 //        test.convertToJson(new Task("12", "desc"));

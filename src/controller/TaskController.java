@@ -2,6 +2,7 @@ package controller;
 
 import model.JsonDatabase;
 import model.Task;
+import model.TaskDAO;
 import view.TaskView;
 
 import java.util.Iterator;
@@ -20,6 +21,7 @@ public class TaskController {
     private final TaskView view;
     private final Scanner scanner;
     private final JsonDatabase db;
+    private TaskDAO taskDAO;
 
     /**
      * Initializes the TaskController with necessary dependencies.
@@ -30,6 +32,7 @@ public class TaskController {
         db.getData();
         view = new TaskView();
         scanner = new Scanner(System.in);
+        taskDAO = new TaskDAO();
     }
 
     /**
@@ -51,7 +54,7 @@ public class TaskController {
     public void run() {
         boolean isRunning = true;
         while (isRunning) {
-            List<Task> currentTasks = db.getTaskList();
+            List<Task> currentTasks = taskDAO.listAllTasks();
             view.displayMenu(currentTasks);
             // correctIntCheck is handling non-int input error
             int firstUserInput = validateIntegerInput(1,3, "Option");
@@ -101,7 +104,7 @@ public class TaskController {
         }
 
         Task task = new Task(title, description);
-        db.addTask(task);
+        taskDAO.save(task);
         System.out.println("Task added successfully!");
         System.out.println(task);
     }
@@ -127,11 +130,11 @@ public class TaskController {
                     System.out.print("Enter new title: ");
                     newTitle =scanner.nextLine().trim();
                     if(!newTitle.isEmpty()){
-                       break;// if new title input is not empty, exits while loop
+                       break;// if the new title input is not empty, exits while loop
                     }
                     System.out.println("Title can not be empty.");
                 }
-                db.editTask(task, editOption, newTitle);
+                taskDAO.editTitle(task, newTitle);
                 break;
 
 

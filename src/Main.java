@@ -1,6 +1,8 @@
 import controller.TaskController;
 import database.DatabaseInitializer;
 import database.DatabaseManager;
+import model.Task;
+import model.TaskDAO;
 
 public class Main {
     /**
@@ -14,9 +16,10 @@ public class Main {
      */
     public static void main(String[] args) {
         DatabaseInitializer.initializeDatabase();
-        DatabaseManager.insertSimpleTask("new task");
-//        TaskController controller = new TaskController();
-//        controller.run();
+       // DatabaseManager.insertSimpleTask("new task");
+        TaskController controller = new TaskController();
+        controller.run();
+
         DatabaseManager.shutdown();
 
 

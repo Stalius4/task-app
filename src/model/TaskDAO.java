@@ -85,6 +85,22 @@ public class TaskDAO {
             throw new RuntimeException(e);
         }
         }
+        public void toggleTaskStatus(Task task){
+            String sql = "UPDATE tasks SET is_completed = ? WHERE id = ? ";
+            try(Connection conn = getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)){
+                  task.setStatus();
+                    pstmt.setBoolean(1, task.getStatus());
+                    pstmt.setString(2, task.getId().toString());
+                    int rs = pstmt.executeUpdate();
+                    if (rs> 0){
+                        System.out.println("Status has been changed!");
+                        }
+                }
+            catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
 

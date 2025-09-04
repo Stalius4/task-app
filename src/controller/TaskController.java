@@ -152,7 +152,7 @@ public class TaskController {
                 taskDAO.changeDescription(task, newDescription);
                 break;
             case 3: // Toggle status
-                db.editTask(task, editOption, null); // newValue not needed for status toggle
+                taskDAO.toggleTaskStatus(task);
                 break;
             case 4: //Delete
                 db.editTask(task,editOption, null);

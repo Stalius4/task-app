@@ -4,6 +4,8 @@ import database.DatabaseManager;
 import model.Task;
 import model.TaskDAO;
 
+import java.sql.SQLException;
+
 public class Main {
     /**
      * Application entry point. Obtains the singleton Database instance and toggles the status
@@ -14,7 +16,7 @@ public class Main {
      *
      * @param args command-line arguments (ignored)
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         DatabaseInitializer.initializeDatabase();
        // DatabaseManager.insertSimpleTask("new task");
         TaskController controller = new TaskController();

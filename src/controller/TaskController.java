@@ -5,6 +5,7 @@ import model.Task;
 import model.TaskDAO;
 import view.TaskView;
 
+import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
@@ -51,7 +52,7 @@ public class TaskController {
      * the Database-backed task list via the controller's helper methods. Invalid
      * numeric menu choices result in a printed "Invalid option!" message.
      */
-    public void run() {
+    public void run() throws SQLException {
         boolean isRunning = true;
         while (isRunning) {
             List<Task> currentTasks = taskDAO.listAllTasks();
@@ -110,7 +111,7 @@ public class TaskController {
     }
 
 //------------------------Show and edit tasks ---------------------------------------
-    private void editTask(List<Task> currentTasks){
+    private void editTask(List<Task> currentTasks) {
         if(currentTasks.isEmpty()){
             System.out.println("No tasks!");
             return;
@@ -148,7 +149,7 @@ public class TaskController {
                     }
                     System.out.println("Description can not be empty.");
                 }
-                db.editTask(task, editOption, newDescription);
+                taskDAO.changeDescription(task, newDescription);
                 break;
             case 3: // Toggle status
                 db.editTask(task, editOption, null); // newValue not needed for status toggle

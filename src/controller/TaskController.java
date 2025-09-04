@@ -155,7 +155,7 @@ public class TaskController {
                 taskDAO.toggleTaskStatus(task);
                 break;
             case 4: //Delete
-                db.editTask(task,editOption, null);
+                taskDAO.deleteTask(task);
                 break;
             default:
                 System.out.println("Second, Invalid option!");

@@ -101,7 +101,24 @@ public class TaskDAO {
                 throw new RuntimeException(e);
             }
         }
+
+    public void deleteTask(Task task) {
+        String sql = " DELETE FROM tasks WHERE id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, task.getId().toString());
+            int rowsDeleted =pstmt.executeUpdate();
+            if (rowsDeleted > 0) {
+                System.out.println("✓ Task deleted successfully: " + task.getTitle());
+            } else {
+                System.out.println("⚠ No task found with ID: " + task.getId());
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
+}
 
 
 

@@ -37,6 +37,23 @@ public class TaskController {
             return number;
         }
     }
+    enum EditOption {
+        EDIT_TITLE(1),
+        EDIT_DESCRIPTION(2),
+        CHANGE_STATUS(3),
+        DELETE(4),
+        RETURN_BACK(5);
+
+        private final int number;
+
+        EditOption(int number) {
+            this.number = number;
+        }
+
+        public int getNumber() {
+            return number;
+        }
+    }
     /**
      * Initializes the TaskController with necessary dependencies.
      * Sets up the database connection, view, and input scanner.
@@ -144,11 +161,18 @@ public class TaskController {
         Task task = currentTasks.get(selectedTask -1);
         view.displayTask(task);
         view.editOptions();
-        int editOption = validateIntegerInput(1,4,"Option");
+        int editOption = validateIntegerInput(1,5,"Option");
 
+        EditOption userChoice = null;
+        for(EditOption option : EditOption.values()){
+            if(option.getNumber() == editOption){
+                userChoice = option;
+                break;
+            }
+        }
         //Edit tasks
-        switch (editOption){
-            case 1: // Edit title
+        switch (userChoice){
+            case EDIT_TITLE: // Edit title
                 String newTitle;
                 while(true){
                     System.out.print("Enter new title: ");
@@ -162,7 +186,7 @@ public class TaskController {
                 break;
 
 
-            case 2: // Edit description
+            case EDIT_DESCRIPTION: // Edit description
                 String newDescription;
                 while (true) {
                     System.out.print("Enter new description: ");
@@ -174,12 +198,14 @@ public class TaskController {
                 }
                 taskDAO.changeDescription(task, newDescription);
                 break;
-            case 3: // Toggle status
+            case CHANGE_STATUS: // Toggle status
                 taskDAO.toggleTaskStatus(task);
                 break;
-            case 4: //Delete
+            case DELETE: //Delete
                 taskDAO.deleteTask(task);
                 break;
+            case RETURN_BACK:
+               break;
             default:
                 System.out.println("Second, Invalid option!");
         }

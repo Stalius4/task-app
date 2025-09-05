@@ -54,6 +54,7 @@ public class TaskView {
                 1. Edit title
                 2. Edit description
                 3. Make it completed
-                4. Delete""");
+                4. Delete
+                5. Return""");
     }
 }

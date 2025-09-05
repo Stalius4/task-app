@@ -24,6 +24,19 @@ public class TaskController {
     private final JsonDatabase db;
     private TaskDAO taskDAO;
 
+    enum MenuOption {
+        ADD_TASK(1),
+        DISPLAY_TASKS(2),
+        EXIT(3);
+
+        private final int number;
+        MenuOption(int number){
+            this.number = number;
+        }
+        public int getNumber(){
+            return number;
+        }
+    }
     /**
      * Initializes the TaskController with necessary dependencies.
      * Sets up the database connection, view, and input scanner.
@@ -57,17 +70,27 @@ public class TaskController {
         while (isRunning) {
             List<Task> currentTasks = taskDAO.listAllTasks();
             view.displayMenu(currentTasks);
-            // correctIntCheck is handling non-int input error
+            // validateIntegerInput is handling non-int input error
             int firstUserInput = validateIntegerInput(1,3, "Option");
-            switch (firstUserInput) {
-                case 1:
+
+            // new feature for me (enum menu options for a switch statement)
+
+            MenuOption selectedOption = null;
+            for(MenuOption option : MenuOption.values()){
+                if(option.getNumber() == firstUserInput){
+                    selectedOption = option;
+                    break;
+                }
+            }
+            switch (selectedOption) {
+                case ADD_TASK:
                     addTask();
                     break;
-                case 2:
+                case DISPLAY_TASKS:
                     //display all tasks and select 1 task to edit.
                     editTask(currentTasks);
                     break;
-                case 3:
+                case EXIT:
                     isRunning = false;
                     break;
                 default:
